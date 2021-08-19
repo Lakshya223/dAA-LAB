@@ -1,94 +1,42 @@
-// A Java program for Bellman-Ford's single source shortest path
-// algorithm.
-import java.util.*;
-import java.lang.*;
-import java.io.*;
-class Main{// A class to represent a connected, directed and weighted graph
-static class Graph {
- // A class to represent a weighted edge in graph
- class Edge {
- int src, dest, weight;
- Edge()
- {
- src = dest = weight = 0;
- }
- };
- int V, E;
- Edge edge[];
- // Creates a graph with V vertices and E edges
- Graph(int v, int e)
- {
- V = v;
- E = e;
- edge = new Edge[e];
- for (int i = 0; i < e; ++i)
- edge[i] = new Edge();
- }
- // The main function that finds shortest distances from src
- // to all other vertices using Bellman-Ford algorithm. The
- // function also detects negative weight cycle 
- void BellmanFord(Graph graph, int src)
- {
- int V = graph.V, E = graph.E;
- int dist[] = new int[V];
- // Step 1: Initialize distances from src to all other
- // vertices as INFINITE
- for (int i = 0; i < V; ++i)
- dist[i] = Integer.MAX_VALUE;
- dist[src] = 0;
- // Step 2: Relax all edges |V| - 1 times. A simple
- // shortest path from src to any other vertex can
- // have at-most |V| - 1 edges
- for (int i = 1; i < V; ++i) {
- for (int j = 0; j < E; ++j) {
- int u = graph.edge[j].src;
- int v = graph.edge[j].dest;
- int weight = graph.edge[j].weight;
- if (dist[u] != Integer.MAX_VALUE && dist[u] + weight <
-dist[v])
- dist[v] = dist[u] + weight;
- }
- }
-// Step 3: check for negative-weight cycles. The above
- // step guarantees shortest distances if graph doesn't
- // contain negative weight cycle. If we get a shorter
- // path, then there is a cycle.
- for (int j = 0; j < E; ++j) {
- int u = graph.edge[j].src;
- int v = graph.edge[j].dest;
- int weight = graph.edge[j].weight;
- if (dist[u] != Integer.MAX_VALUE && dist[u] + weight < dist[v]) {
- System.out.println("Graph contains negative weight cycle");
- return;
- }
- }
- printArr(dist, V); 
- }
-// A utility function used to print the solution
- void printArr(int dist[], int V)
- {
- System.out.println("Vertex Distance from Source");
- for (int i = 0; i < V; ++i)
- System.out.println(i + "\t\t" + dist[i]);
- }}
- public static void main(String[] args)
- {
- Scanner scan = new Scanner(System.in);
- System.out.println("Enter the number of vertices: ");
- int V = scan.nextInt(); // Number of vertices in graph
- System.out.println("Enter the number of edges: ");
- int E = scan.nextInt(); // Number of edges in graph
- System.out.println("Enter the number of source,dest,weight of eachedge: ");
- Graph graph = new Graph(V, E);
- for(int i = 0; i < E; i++){
- graph.edge[i].src = scan.nextInt();
- graph.edge[i].dest = scan.nextInt();
- graph.edge[i].weight = scan.nextInt();
- }
- long start = System.currentTimeMillis();
- graph.BellmanFord(graph, 0);
- long finish = System.currentTimeMillis();
- long timeElapsed = finish - start;
- System.out.println("Time Elapsed: "+timeElapsed+"ms");
- }
+class q10_bellman_ford{
+    static void BellmanFord(int graph[][], int V, int E,
+                    int src){
+        int []dis = new int[V];
+        for (int i = 0; i < V; i++)
+            dis[i] = Integer.MAX_VALUE;
+        dis[src] = 0;
+        for (int i = 0; i < V - 1; i++){
+    
+            for (int j = 0; j < E; j++){
+                if (dis[graph[j][0]] != Integer.MAX_VALUE && dis[graph[j][0]] + graph[j][2] <
+                                dis[graph[j][1]])
+                    dis[graph[j][1]] =
+                    dis[graph[j][0]] + graph[j][2];
+            }
+        }
+        for (int i = 0; i < E; i++){
+            int x = graph[i][0];
+            int y = graph[i][1];
+            int weight = graph[i][2];
+            if (dis[x] != Integer.MAX_VALUE &&
+                    dis[x] + weight < dis[y])
+                System.out.println("Graph contains negative"
+                        +" weight cycle");
+        }
+    
+        System.out.println("Vertex Distance from Source");
+        for (int i = 0; i < V; i++)
+            System.out.println(i + "\t\t" + dis[i]);
+    }
+    public static void main(String[] args){
+        int V = 5;
+        int E = 8;
+        int graph[][] = { { 0, 1, -1 }, { 0, 2, 4 },
+                        { 1, 2, 3 }, { 1, 3, 2 },
+                        { 1, 4, 2 }, { 3, 2, 5 },
+                        { 3, 1, 1 }, { 4, 3, -3 } };
+    
+        BellmanFord(graph, V, E, 0);
+    }
 }
+//contributed by Utkarsh
